@@ -1,12 +1,17 @@
 <template>
-  <div>
-    <h1 class="page-header">Today I Learned</h1>
+  <div class="main container-list">
+    <div>
+      <h1 class="page-header">Today I Learned</h1>
 
-    <LoadingSpinner v-if="isLoading"></LoadingSpinner>
-    <ul v-else>
-      <PostListItem v-for="postItem in postItems" :key="postItem._id" :postItem="postItem"></PostListItem>
-    </ul>
+      <LoadingSpinner v-if="isLoading"></LoadingSpinner>
+      <ul v-else>
+        <PostListItem v-for="postItem in postItems" :key="postItem._id" :postItem="postItem"></PostListItem>
+      </ul>
+    </div>
+    <router-link to="/add" class="create-button"> +</router-link>
+
   </div>
+
 </template>
 
 <script>
