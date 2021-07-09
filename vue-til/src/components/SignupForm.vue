@@ -22,6 +22,7 @@
 
 <script>
 import {registerUser} from '@/api/index'
+import {validateEmail} from "@/utils/validation";
 
 export default {
 
@@ -50,6 +51,11 @@ export default {
       this.username = '';
       this.password = '';
       this.nickname = '';
+    }
+  },
+  computed: {
+    isUsernameValid() {
+      return validateEmail(this.username)
     }
   }
 }
