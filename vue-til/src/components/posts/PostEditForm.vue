@@ -1,6 +1,6 @@
 <template>
   <div class="contents">
-    <h1 class="page-header">생성 페이지</h1>
+    <h1 class="page-header">수정 페이지</h1>
     <div class="form-wrapper">
       <form class="form" @submit.prevent="submitForm">
         <div>
@@ -12,20 +12,23 @@
           <textarea id="contents" rows="5" v-model="contents"/>
           <p v-if="!isContentsValid" class="validation-text waring">Contents length must be less than 200</p>
         </div>
-        <button class="btn" type="submit">등록 하기</button>
+        <button class="btn" type="submit">수정 하기</button>
       </form>
-      <p>{{ logMessage }}</p>
+      <ToastPopup/>
     </div>
   </div>
 </template>
 
 <script>
-import {createPost} from '@/api/posts'
+import {fetchPost, updatePost} from "@/api/posts";
+import ToastPopup from "@/components/common/ToastPopup";
 
 export default {
-  name: "PostAddForm",
+  name: "PostEditForm",
+  components: {ToastPopup},
   data() {
     return {
+      id: '',
       title: '',
       contents: '',
       logMessage: '',
@@ -34,14 +37,15 @@ export default {
   methods: {
     async submitForm() {
       try {
-        await createPost({
+        const postData = {
           title: this.title,
-          contents: this.contents
-        })
-        await this.$router.push('/main');
+          contents: this.contents,
+        }
+        const response = await updatePost(this.id, postData)
+        await this.$router.push('/main')
       } catch (error) {
-        this.logMessage = '에러'
-        console.log(error)
+        console.log(error);
+        this.logMessage = error;
       }
     },
   },
@@ -49,12 +53,16 @@ export default {
     isContentsValid() {
       return this.contents.length <= 200;
     }
+  },
+  async created() {
+    this.id = this.$route.params.id;
+    const {data} = await fetchPost(this.id);
+    this.title = data.title;
+    this.contents = data.contents;
   }
 }
 </script>
 
 <style scoped>
-.form-wrapper .form {
-  width: 100%;
-}
+
 </style>

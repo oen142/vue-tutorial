@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import {getUserFromCookie, getAuthFromCookie, saveAuthToCookie, saveUserToCookie} from '@/utils/cookies'
-import {loginUser , createPost} from '@/api/index'
+import {loginUser} from '@/api/auth'
+import {createPost} from "@/api/posts";
 
 Vue.use(Vuex);
 
@@ -22,6 +23,9 @@ export default new Vuex.Store({
         clearUsername(state) {
             state.username = '';
         },
+        clearToken(state) {
+            state.token = '';
+        },
         setToken(state, token) {
             state.token = token;
         }
@@ -37,8 +41,8 @@ export default new Vuex.Store({
         },
         async POST({commit}, postData) {
             const {data} = await createPost(postData);
-            commit('title' , data.posts.title)
-            commit('contents' , data.posts.contents)
+            commit('title', data.posts.title)
+            commit('contents', data.posts.contents)
 
         }
     }
